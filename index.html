@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastro de Colaboradores</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(45deg, rgb(34, 58, 110), #ffffff); /* Degradê de fundo do corpo */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 800px;
+      padding: 20px;
+      background: linear-gradient(135deg, rgb(34, 58, 110), #f1f1f1); /* Degradê no fundo do container */
+      border: 7px solid #000000;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #000000;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group input, .form-group select {
+      padding: 8px;
+      width: 100%;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .form-group button {
+      padding: 10px 15px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    .form-group button:hover {
+      background-color: #0056b3;
+    }
+
+    .colaboradores-lista {
+      margin-top: 30px;
+    }
+
+    .colaborador {
+      background-color: #ffffff;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .colaborador button {
+      margin-left: 10px;
+      padding: 5px 10px;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+    }
+
+    .edit-btn {
+      background-color: #ffc107;
+      color: white;
+    }
+
+    .remove-btn {
+      background-color: #dc3545;
+      color: white;
+    }
+
+    .save-btn {
+      background-color: #28a745;
+      color: white;
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Cadastro de Colaboradores</h1>
+
+    <div class="form-group">
+      <label for="idInput">ID</label>
+      <input type="text" id="idInput" placeholder="ID">
+
+      <label for="nomeInput">NOME</label>
+      <input type="text" id="nomeInput" placeholder="Nome">
+
+      <label for="funcaoInput">FUNÇÃO</label>
+      <select id="funcaoInput">
+        <option value="">Selecione a Função</option>
+        <option value="Mecânico">Mecânico</option>
+        <option value="Eletricista">Eletricista</option>
+        <option value="Técnico de TI">Técnico de TI</option>
+        <option value="Técnico de Segurança">Técnico de Segurança</option>
+        <option value="Administração">Administração</option>
+      </select>
+
+      <label for="salarioInput">SALÁRIO</label>
+      <input type="text" id="salarioInput" placeholder="Salário">
+
+      <label for="admissaoInput">DT. ADMISSÃO</label>
+      <input type="text" id="admissaoInput" placeholder="Dt. Admissão">
+
+      <label for="demissaoInput">DT. DEMISSÃO</label>
+      <input type="text" id="demissaoInput" placeholder="Dt. Demissão">
+
+      <button onclick="adicionarColaborador()">Adicionar Colaborador</button>
+    </div>
+
+    <div class="colaboradores-lista" id="colaboradoresLista">
+      <!-- Lista de colaboradores será exibida aqui -->
+    </div>
+  </div>
+
+  <script>
+    // Lista para armazenar os colaboradores
+    let colaboradores = [];
+
+    // Função para adicionar colaborador
+    function adicionarColaborador() {
+      const id = document.getElementById('idInput').value;
+      const nome = document.getElementById('nomeInput').value;
+      const funcao = document.getElementById('funcaoInput').value;
+      const salario = document.getElementById('salarioInput').value;
+      const admissao = document.getElementById('admissaoInput').value;
+      const demissao = document.getElementById('demissaoInput').value;
+
+      // Verifica se todos os campos estão preenchidos
+      if (!id || !nome || !funcao || !salario || !admissao) {
+        alert('Por favor, preencha todos os campos.');
+        return;
+      }
+
+      const colaborador = {
+        id,
+        nome,
+        funcao,
+        salario,
+        admissao,
+        demissao
+      };
+
+      // Adiciona o colaborador à lista
+      colaboradores.push(colaborador);
+
+      // Exibe a lista atualizada
+      exibirColaboradores();
+
+      // Limpa os campos do formulário
+      limparFormulario();
+    }
+
+    // Função para exibir a lista de colaboradores
+    function exibirColaboradores() {
+      const listaContainer = document.getElementById('colaboradoresLista');
+      listaContainer.innerHTML = '';
+
+      colaboradores.forEach((colaborador, index) => {
+        const colaboradorDiv = document.createElement('div');
+        colaboradorDiv.classList.add('colaborador');
+        colaboradorDiv.innerHTML = `
+          <strong>ID:</strong> ${colaborador.id}<br>
+          <strong>Nome:</strong> ${colaborador.nome}<br>
+          <strong>Função:</strong> ${colaborador.funcao}<br>
+          <strong>Salário:</strong> ${colaborador.salario}<br>
+          <strong>Dt. Admissão:</strong> ${colaborador.admissao}<br>
+          <strong>Dt. Demissão:</strong> ${colaborador.demissao || 'N/A'}<br>
+          <button class="edit-btn" onclick="editarColaborador(${index})">Editar</button>
+          <button class="remove-btn" onclick="removerColaborador(${index})">Remover</button>
+        `;
+
+        listaContainer.appendChild(colaboradorDiv);
+      });
+    }
+
+    // Função para editar um colaborador
+    function editarColaborador(index) {
+      const colaborador = colaboradores[index];
+
+      // Preenche os campos do formulário com os dados do colaborador
+      document.getElementById('idInput').value = colaborador.id;
+      document.getElementById('nomeInput').value = colaborador.nome;
+      document.getElementById('funcaoInput').value = colaborador.funcao;
+      document.getElementById('salarioInput').value = colaborador.salario;
+      document.getElementById('admissaoInput').value = colaborador.admissao;
+      document.getElementById('demissaoInput').value = colaborador.demissao;
+
+      // Alterar o botão para "Salvar" ao invés de "Adicionar"
+      const btn = document.querySelector('.form-group button');
+      btn.textContent = 'Salvar Alterações';
+      btn.onclick = function () {
+        salvarAlteracoes(index);
+      };
+    }
+
+    // Função para salvar as alterações de um colaborador
+    function salvarAlteracoes(index) {
+      const id = document.getElementById('idInput').value;
+      const nome = document.getElementById('nomeInput').value;
+      const funcao = document.getElementById('funcaoInput').value;
+      const salario = document.getElementById('salarioInput').value;
+      const admissao = document.getElementById('admissaoInput').value;
+      const demissao = document.getElementById('demissaoInput').value;
+
+      // Atualiza o colaborador na lista
+      colaboradores[index] = {
+        id,
+        nome,
+        funcao,
+        salario,
+        admissao,
+        demissao
+      };
+
+      // Exibe a lista atualizada
+      exibirColaboradores();
+
+      // Limpa o formulário e restaura o botão
+      limparFormulario();
+      const btn = document.querySelector('.form-group button');
+      btn.textContent = 'Adicionar Colaborador';
+      btn.onclick = adicionarColaborador;
+    }
+
+    // Função para remover um colaborador
+    function removerColaborador(index) {
+      colaboradores.splice(index, 1); // Remove o colaborador da lista
+      exibirColaboradores(); // Atualiza a lista exibida
+    }
+
+    // Função para limpar os campos do formulário
+    function limparFormulario() {
+      document.getElementById('idInput').value = '';
+      document.getElementById('nomeInput').value = '';
+      document.getElementById('funcaoInput').value = '';
+      document.getElementById('salarioInput').value = '';
+      document.getElementById('admissaoInput').value = '';
+      document.getElementById('demissaoInput').value = '';
+    }
+
+  </script>
+
+</body>
+</html>
